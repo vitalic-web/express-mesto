@@ -9,7 +9,7 @@ usersRouter.use('/users/:id', (req, res) => {
       if (!data) {
         res
           .status(500)
-          .send('No Users!')
+          .send(JSON.stringify({ "message": "Запрашиваемый ресурс не найден" }))
         return;
       }
 
@@ -18,8 +18,7 @@ usersRouter.use('/users/:id', (req, res) => {
       if (!foundUser) {
         res
           .status(404)
-          .send(JSON.stringify({ "message": "Запрашиваемый ресурс не найден" }
-          ))
+          .send(JSON.stringify({ "message": "Запрашиваемый ресурс не найден" }))
       }
 
       res
@@ -35,7 +34,7 @@ usersRouter.use('/users', (req, res) => {
       if (!data) {
         res
           .status(500)
-          .send('No Users!')
+          .send(JSON.stringify({ "message": "Запрашиваемый ресурс не найден" }))
         return;
       }
 

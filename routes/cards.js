@@ -9,7 +9,7 @@ cardsRouter.use('/cards', (req, res) => {
       if (!data) {
         res
           .status(500)
-          .send('No Cards!')
+          .send(JSON.stringify({ "message": "Запрашиваемый ресурс не найден" }))
         return;
       }
 
