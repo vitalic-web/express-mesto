@@ -3,13 +3,13 @@ const path = require('path');
 const { getJsonFile } = require('../helpers/file-reader');
 
 // роут на выгрузку данных юзера по айди
-usersRouter.use('/users/:id', (req, res) => {
+usersRouter.get('/users/:id', (req, res) => {
   return getJsonFile(path.join(__dirname, '..', 'data', 'users.json'))
     .then(data => {
       if (!data) {
         res
-          .status(500)
-          .send(JSON.stringify({ "message": "Запрашиваемый ресурс не найден" }))
+          .status(404)
+          .send({ "message": "Запрашиваемый ресурс не найден" })
         return;
       }
 
@@ -19,6 +19,7 @@ usersRouter.use('/users/:id', (req, res) => {
         res
           .status(404)
           .send(JSON.stringify({ "message": "Запрашиваемый ресурс не найден" }))
+        return;
       }
 
       res
@@ -28,13 +29,13 @@ usersRouter.use('/users/:id', (req, res) => {
 });
 
 // роут на выгрузку данных всех юзеров
-usersRouter.use('/users', (req, res) => {
+usersRouter.get('/users', (req, res) => {
   return getJsonFile(path.join(__dirname, '..', 'data', 'users.json'))
     .then(data => {
       if (!data) {
         res
           .status(500)
-          .send(JSON.stringify({ "message": "Запрашиваемый ресурс не найден" }))
+          .send({ "message": "Запрашиваемый ресурс не найден" })
         return;
       }
 
