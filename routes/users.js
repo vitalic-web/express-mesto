@@ -34,7 +34,7 @@ usersRouter.get('/users', (req, res) => {
     .then(data => {
       if (!data) {
         res
-          .status(500)
+          .status(404)
           .send({ "message": "Запрашиваемый ресурс не найден" })
         return;
       }
