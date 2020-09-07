@@ -17,7 +17,7 @@ usersRouter.get('/users/:id', (req, res) => getJsonFile(path.join(__dirname, '..
     if (!foundUser) {
       res
         .status(404)
-        .send({ message: 'Запрашиваемый ресурс не найден' });
+        .send({ message: 'Нет пользователя с таким id' });
       return;
     }
 
