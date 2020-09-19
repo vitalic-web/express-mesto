@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -12,6 +13,14 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
+
+// создание лимита на запросы
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+
+app.use(limiter); // запуск лимитера
 
 app.use(express.json()); // метод для парсинга req.body
 

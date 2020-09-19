@@ -15,26 +15,21 @@ const createCard = (req, res) => {
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      const ERROR_CODE = 400;
-      const ERROR_CODE_SERVER = 500;
-
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE).send({ message: 'Введены некорректные данные' });
-      } return res.status(ERROR_CODE_SERVER).send({ message: 'На сервере произошла ошибка' });
+        res.status(400).send({ message: 'Введены некорректные данные' });
+      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
 // удаление карточки по id
 const deleteCardById = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
+    .orFail(new Error('NotValidCard'))
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      const ERROR_CODE = 404;
-      const ERROR_CODE_SERVER = 500;
-
-      if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Карточка не найдена' });
-      } return res.status(ERROR_CODE_SERVER).send({ message: 'На сервере произошла ошибка' });
+      if (err.message === 'NotValidCard') {
+        res.status(404).send({ message: 'Карточка не найдена' });
+      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -45,8 +40,13 @@ const likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
+    .orFail(new Error('NotValidCard'))
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch((err) => {
+      if (err.message === 'NotValidCard') {
+        res.status(404).send({ message: 'Карточка не найдена' });
+      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 // дизлайк карточке
@@ -56,8 +56,13 @@ const dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
+    .orFail(new Error('NotValidCard'))
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch((err) => {
+      if (err.message === 'NotValidCard') {
+        res.status(404).send({ message: 'Карточка не найдена' });
+      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 module.exports = {

@@ -14,26 +14,21 @@ const createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      const ERROR_CODE = 400;
-      const ERROR_CODE_SERVER = 500;
-
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE).send({ message: 'Введены некорректные данные' });
-      } return res.status(ERROR_CODE_SERVER).send({ message: 'На сервере произошла ошибка' });
+        res.status(400).send({ message: 'Введены некорректные данные' });
+      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
 // поиск юзера по id
 const getUserById = (req, res) => {
   User.findById(req.params.userId)
+    .orFail(new Error('NotValidId'))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      const ERROR_CODE = 404;
-      const ERROR_CODE_SERVER = 500;
-
-      if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Пользователь не найден' });
-      } return res.status(ERROR_CODE_SERVER).send({ message: 'На сервере произошла ошибка' });
+      if (err.message === 'NotValidId') {
+        res.status(404).send({ message: 'Пользователь не найден' });
+      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
