@@ -1,21 +1,13 @@
 const cardsRouter = require('express').Router();
-const path = require('path');
-const { getJsonFile } = require('../helpers/file-reader');
+const {
+  getAllCards, createCard, deleteCardById, likeCard, dislikeCard,
+} = require('../controllers/cards');
 
-// роут на выгрузку данных карточек
-cardsRouter.get('/cards', (req, res) => getJsonFile(path.join(__dirname, '..', 'data', 'cards.json'))
-  .then((data) => {
-    if (!data) {
-      res
-        .status(500)
-        .send({ message: 'Запрашиваемый ресурс не найден' });
-      return;
-    }
-
-    res
-      .status(200)
-      .send(data);
-  }));
+cardsRouter.get('/cards', getAllCards);
+cardsRouter.post('/cards', createCard);
+cardsRouter.delete('/cards/:cardId', deleteCardById);
+cardsRouter.put('/cards/:cardId/likes', likeCard);
+cardsRouter.delete('/cards/:cardId/likes', dislikeCard);
 
 module.exports = {
   cardsRouter,
