@@ -38,6 +38,7 @@ const deleteCardById = (req, res) => {
     });
 };
 
+// лайк карточке
 const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
@@ -48,6 +49,7 @@ const likeCard = (req, res) => {
     .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 };
 
+// дизлайк карточке
 const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
